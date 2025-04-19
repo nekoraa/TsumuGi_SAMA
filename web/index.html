@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live2D Demo</title>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+  <!-- **首先引入 PixiJS 库!** -->
+  <script src="libs/live2dcubismcore.min.js"></script>
+  <script src="libs/live2d.min.js"></script>
+  <script src="libs/pixi.min.js"></script>
+  <script src="libs/pixi-live2d-display.min.js"></script>
+
+
+
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    window.PIXI = PIXI;
+
+    (async function () {
+      const 应用 = new PIXI.Application({ // 现在 PIXI.Application 应该是一个构造函数了！
+        view: document.getElementById('canvas'),
+        resizeTo: window,
+        transparent: true,
+      });
+
+      const 模型 = await PIXI.live2d.Live2DModel.from('hiyori_free_en/runtime/hiyori_free_t08.model3.json',{ autoInteract: true });
+      window.live2d模型 = 模型;
+
+      false
+
+      应用.stage.addChild(模型);
+
+      模型.anchor.set(0.5, 0.5);
+      模型.scale.set(0.2);
+      模型.x = window.innerWidth / 2;
+      模型.y = window.innerHeight / 2;
+
+
+
+
+
+
+      // 点击交互事件
+      模型.on('hit', (命中区域) => {
+        if (命中区域.includes('body')) {
+          模型.motion('tap_body');
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        模型.x = window.innerWidth / 2;
+        模型.y = window.innerHeight / 2;
+      });
+
+    live2d模型.internalModel.motionManager.update = (delta) => {};
+
+
+    })();
+  </script>
+</body>
+</html>
+

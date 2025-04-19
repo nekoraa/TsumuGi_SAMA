@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live2D Demo - Backend Control</title>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+  <!-- **首先引入 PixiJS 库!** -->
+  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    window.PIXI = PIXI;
+    let 模型; // 定义模型变量在外部作用域，方便更新
+
+    (async function () {
+      const 应用 = new PIXI.Application({
+        view: document.getElementById('canvas'),
+        resizeTo: window,
+        transparent: true,
+      });
+
+      模型 = await PIXI.live2d.Live2DModel.from('hiyori_free_en/runtime/hiyori_free_t08.model3.json');
+      应用.stage.addChild(模型);
+
+      模型.anchor.set(0.5, 0.5);
+      模型.scale.set({{ model_state.scale }}); // 从后端获取初始缩放
+      模型.x = window.innerWidth * {{ model_state.x }}; // 从后端获取初始 x 位置
+      模型.y = window.innerHeight * {{ model_state.y }}; // 从后端获取初始 y 位置
+
+
+      // 点击交互事件 (保持不变)
+      模型.on('hit', (命中区域) => {
+        if (命中区域.includes('body')) {
+          // 示例: 点击身体播放 'tap_body' 动作，并通过 API 更新后端状态
+          fetch('/api/model_state', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ motion: 'tap_body' })
+          });
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        模型.x = window.innerWidth * {{ model_state.x }}; // 窗口大小改变时，根据后端比例调整位置
+        模型.y = window.innerHeight * {{ model_state.y }};
+      });
+
+      // 定期从后端获取模型状态并更新
+      async function updateModel() {
+        while (true) {
+          const response = await fetch('/api/model_state');
+          const data = await response.json();
+
+          // 更新模型参数
+          if (模型) { // 确保模型已加载
+              if (data.motion && data.motion !== 模型.motionManager.currentPriority()) { // 避免重复播放相同动作
+                  模型.motion(data.motion);
+              }
+              模型.lipSync = true; // 开启嘴唇同步 (如果模型支持)
+              模型.expression(); // 确保表情更新 (如果需要)
+              // 直接设置嘴巴张合参数 (需要模型支持参数 'ParamMouthOpenY')
+              if (模型.internalModel.parameterStores.ids.includes('ParamMouthOpenY')) {
+                  模型.internalModel.setParameterValue('ParamMouthOpenY', data.mouth_open);
+              }
+              模型.scale.set(data.scale);
+              模型.x = window.innerWidth * data.x;
+              模型.y = window.innerHeight * data.y;
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 100)); // 每 100ms 更新一次
+        }
+      }
+      updateModel(); // 启动定期更新
+    })();
+  </script>
+</body>
+</html>

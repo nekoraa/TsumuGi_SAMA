@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟光标</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        #cursor {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none; /* 防止干扰用户操作 */
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        let cursorPosition = { x: 0, y: 0 };
+
+        // 模拟光标每秒随机改变位置
+        function randomizeCursor() {
+            cursorPosition.x = Math.random() * window.innerWidth;
+            cursorPosition.y = Math.random() * window.innerHeight;
+
+            // 更新虚拟光标的位置
+            cursor.style.left = cursorPosition.x + 'px';
+            cursor.style.top = cursorPosition.y + 'px';
+
+            // 打印虚拟光标的位置
+            console.log('虚拟光标位置:', cursorPosition);
+        }
+
+        // 每秒更新一次虚拟光标的位置
+        setInterval(randomizeCursor, 1000);
+
+        // 监听鼠标事件，检查虚拟光标
+        document.addEventListener('mousemove', (event) => {
+            console.log(`用户光标位置: (${event.clientX}, ${event.clientY})`);
+        });
+
+    </script>
+</body>
+</html>
