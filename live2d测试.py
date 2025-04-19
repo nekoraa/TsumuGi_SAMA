@@ -139,59 +139,57 @@ if __name__ == '__main__':
     窗口.resize(1000, 800)
     窗口.show()
 
-    # 摆头角度X = [0.0]
-    # 摆头角度Y = [0.0]
-    # 摆头角度Z = [0.0]
-    #
-    # 身体角度X = [0.0]
-    # 身体角度Y = [0.0]
-    # 身体角度Z = [0.0]
-    #
-    # 动画线程 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(摆头角度X,)
-    # )
-    # 动画线程.start()
-    #
-    # 动画线程1 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(摆头角度Y, -10, 10, 120, 1, 0.5)
-    # )
-    # 动画线程1.start()
-    #
-    # 动画线程2 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(摆头角度Z, -30, 30, 120, 2, 0.2)
-    # )
-    # 动画线程2.start()
-    #
-    # 动画线程3 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(身体角度X, -5, 5, 120, 0.5, 0.2)
-    # )
-    # 动画线程3.start()
-    #
-    # 动画线程4 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(身体角度Y, -5, 5, 120, 0.5, 0.2)
-    # )
-    # 动画线程4.start()
-    #
-    # 动画线程5 = threading.Thread(
-    #     target=模拟摆头动作,
-    #     args=(身体角度Z, -20, 20, 120, 1, 0.2)
-    # )
-    # 动画线程5.start()
+    摆头角度X = [0.0]
+    摆头角度Y = [0.0]
+    摆头角度Z = [0.0]
 
-    # def 控制动作():
-    #     窗口.控制动作("ParamAngleX", 摆头角度X[0])
-    #     窗口.控制动作("ParamAngleY", 摆头角度Y[0])
-    #     窗口.控制动作("ParamAngleZ", 摆头角度Z[0])
-    #     窗口.控制动作("ParamBodyAngleZ", 身体角度X[0])
-    #     窗口.控制动作("ParamBodyAngleX", 身体角度Y[0])
+    身体角度X = [0.0]
+    身体角度Y = [0.0]
+    身体角度Z = [0.0]
+
+    动画线程 = threading.Thread(
+        target=模拟摆头动作,
+        args=(摆头角度X,)
+    )
+    动画线程.start()
+
+    动画线程1 = threading.Thread(
+        target=模拟摆头动作,
+        args=(摆头角度Y, -10, 10, 120, 1, 0.5)
+    )
+    动画线程1.start()
+
+    动画线程2 = threading.Thread(
+        target=模拟摆头动作,
+        args=(摆头角度Z, -30, 30, 120, 2, 0.2)
+    )
+    动画线程2.start()
+
+    动画线程3 = threading.Thread(
+        target=模拟摆头动作,
+        args=(身体角度X, -5, 5, 120, 0.5, 0.2)
+    )
+    动画线程3.start()
+
+    动画线程4 = threading.Thread(
+        target=模拟摆头动作,
+        args=(身体角度Y, -5, 5, 120, 0.5, 0.2)
+    )
+    动画线程4.start()
+
+    动画线程5 = threading.Thread(
+        target=模拟摆头动作,
+        args=(身体角度Z, -20, 20, 120, 1, 0.2)
+    )
+    动画线程5.start()
 
     def 控制动作():
-        窗口.控制动作("ParamAngleX", -30)
+        窗口.控制动作("ParamAngleX", 摆头角度X[0])
+        窗口.控制动作("ParamAngleY", 摆头角度Y[0])
+        窗口.控制动作("ParamAngleZ", 摆头角度Z[0])
+        窗口.控制动作("ParamBodyAngleZ", 身体角度X[0])
+        窗口.控制动作("ParamBodyAngleX", 身体角度Y[0])
+
 
     定时器 = QTimer()
     定时器.timeout.connect(控制动作)
