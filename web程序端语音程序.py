@@ -58,7 +58,6 @@ if __name__ == "__main__":
             窗口.设置嘴巴大小(从变量1 * 0.005)
 
         if not 主程序.字节流:
-            窗口.开始动作()
             窗口.设置嘴巴大小(0)
 
 
@@ -70,7 +69,6 @@ if __name__ == "__main__":
     身体角度Y = [0.0]
     身体角度Z = [0.0]
 
-    动作变量 = [0,0]
 
     # 按顺序组合各角度变量及其对应参数
     线程参数列表 = [
@@ -87,6 +85,7 @@ if __name__ == "__main__":
         threading.Thread(target=模拟摆头动作, args=参数).start()
 
 
+
     def 控制动作():
         窗口.控制动作("ParamAngleX", 摆头角度X[0])
         窗口.控制动作("ParamAngleY", 摆头角度Y[0])
@@ -98,6 +97,10 @@ if __name__ == "__main__":
     定时器3 = QTimer()
     定时器3.timeout.connect(控制动作)
     定时器3.start(8)  # 毫秒
+
+    定时器4 = QTimer()
+    定时器4.timeout.connect(lambda: 窗口.检测动作(主程序.说话参数))
+    定时器4.start(100)  # 毫秒
 
     窗口.停止动作()
 

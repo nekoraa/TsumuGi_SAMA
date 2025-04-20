@@ -133,13 +133,41 @@ class 主窗口(QMainWindow):
         )
 
     def 检测动作(self, 动作参数):
-        while True:
-            if 动作参数[0] == 1:
-                print(动作参数[1])
-                动作参数[0] = 0
-                动作参数[1] = 0
-            else:
-                time.sleep(0.1)
+
+        if 动作参数[0] == 1:
+
+            print("执行动作:" + str(动作参数[1]))
+
+            if 动作参数[1] == "开心":
+                self.浏览器.page().runJavaScript(
+                    """
+                    live2d模型.motion('Tap', 1);
+                    """
+                )
+            if 动作参数[1] == "吃惊":
+                self.浏览器.page().runJavaScript(
+                    """
+                    live2d模型.motion('Tap', 0);
+                    """
+                )
+            if 动作参数[1] == "失望":
+                self.浏览器.page().runJavaScript(
+                    """
+                    live2d模型.motion('Flick@Body', 0);
+                    """
+                )
+            if 动作参数[1] == "害羞":
+                self.浏览器.page().runJavaScript(
+                    """
+                    live2d模型.motion('FlickDown', 0);
+                    """
+                )
+
+            动作参数[0] = 0
+            动作参数[1] = "0"
+
+            print("执行动作:" + str(动作参数[1]))
+
 
 
 if __name__ == '__main__':
@@ -200,9 +228,16 @@ if __name__ == '__main__':
         窗口.控制动作("ParamBodyAngleX", 身体角度Y[0])
 
 
+    说话参数 = [0, "失望"]
+
+
+    定时器2 = QTimer()
+    定时器2.timeout.connect(控制动作)
+    定时器2.start(8)  # 毫秒
+
     定时器 = QTimer()
-    定时器.timeout.connect(控制动作)
-    定时器.start(8)  # 毫秒
+    定时器.timeout.connect(lambda: 窗口.检测动作(说话参数))
+    定时器.start(100)  # 毫秒
 
     # 定时器1 = QTimer()
     # 定时器1.timeout.connect(控制动作1)

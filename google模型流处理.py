@@ -1,9 +1,10 @@
 import os
 import warnings
 
-from 函数列表 import get_current_temperature, do_action_by_emotion
-
+from 函数列表 import do_action_by_emotion
+import ast
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 import asyncio
 import base64
@@ -40,7 +41,7 @@ from google.genai import types
             prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Leda")
         )
     ),
-    tools=[do_action_by_emotion,get_current_temperature],
+    tools=[do_action_by_emotion],
     # types.Tool(google_search=types.GoogleSearch()),
 )
 
@@ -53,6 +54,7 @@ class 音频循环:
         self.字节流 = None
         self.会话 = None
         self.音频输入队列 = None
+        self.说话参数 = [0, "0"]
 
     async def 发送文本(self):
         while True:
@@ -113,8 +115,15 @@ class 音频循环:
         while True:
             turn = self.会话.receive()
             async for response in turn:
+
                 if response.tool_call:
-                    print(response.tool_call.function_calls)
+                    # print(response.tool_call)
+                    if response.tool_call.function_calls[0].name == "do_action_by_emotion":
+
+                        self.说话参数[1] = response.tool_call.function_calls[0].args['emotion']
+                        self.说话参数[0] = 1
+                        # print("执行动作:" + str(response.tool_call.function_calls[0].args['emotion']))
+
                 if 数据 := response.data:
                     for i in range(0, len(数据), CHUNK_SIZE):
                         小块 = 数据[i:i + CHUNK_SIZE]
