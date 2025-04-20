@@ -141,6 +141,7 @@ class 音频循环:
             channels=声道数,
             rate=接收采样率,
             output=True,
+            # output_device_index=17,
         )
         while True:
             self.字节流 = await self.音频输入队列.get()
