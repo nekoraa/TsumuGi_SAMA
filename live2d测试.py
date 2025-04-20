@@ -132,6 +132,15 @@ class 主窗口(QMainWindow):
             """
         )
 
+    def 检测动作(self, 动作参数):
+        while True:
+            if 动作参数[0] == 1:
+                print(动作参数[1])
+                动作参数[0] = 0
+                动作参数[1] = 0
+            else:
+                time.sleep(0.1)
+
 
 if __name__ == '__main__':
     应用 = QApplication(sys.argv)

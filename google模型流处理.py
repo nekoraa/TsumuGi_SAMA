@@ -1,5 +1,8 @@
 import os
 import warnings
+
+from 函数列表 import get_current_temperature, do_action_by_emotion
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 import asyncio
@@ -22,7 +25,7 @@ from google.genai import types
 音频库 = pyaudio.PyAudio()
 
 模型 = "models/gemini-2.0-flash-live-001"
-提示词 = """あなたは日本語の会話練習AIで、名前はつむぎ。若者っぽいカジュアルな話し方で答えて。敬語は使わず、全部タメ口で。話すスピードはゆっくりめに。"""
+提示词 = """あなたは日本語の会話練習AIで、名前はつむぎ。敬語は使わず、全部タメ口で。初級と中級の日本語を使ってください"""
 
 客户端 = genai.Client(
     http_options={"api_version": "v1beta"},
@@ -37,7 +40,8 @@ from google.genai import types
             prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Leda")
         )
     ),
-    tools=[types.Tool(google_search=types.GoogleSearch())],
+    tools=[do_action_by_emotion,get_current_temperature],
+    # types.Tool(google_search=types.GoogleSearch()),
 )
 
 
@@ -109,6 +113,8 @@ class 音频循环:
         while True:
             turn = self.会话.receive()
             async for response in turn:
+                if response.tool_call:
+                    print(response.tool_call.function_calls)
                 if 数据 := response.data:
                     for i in range(0, len(数据), CHUNK_SIZE):
                         小块 = 数据[i:i + CHUNK_SIZE]

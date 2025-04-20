@@ -29,7 +29,7 @@
         transparent: true,
       });
 
-      const 模型 = await PIXI.live2d.Live2DModel.from('hiyori_free_en/runtime/hiyori_free_t08.model3.json',{ autoInteract: true });
+      const 模型 = await PIXI.live2d.Live2DModel.from('hiyori_free_en/runtime/hiyori_free_t08.model3.json',{ autoInteract: true,idleMotionGroup: ' ' });
       window.live2d模型 = 模型;
 
       false
@@ -58,7 +58,7 @@
         模型.y = window.innerHeight / 2;
       });
 
-    live2d模型.internalModel.motionManager.update = (delta) => {};
+      模型.motion('Flick', 0);
 
 
     })();
