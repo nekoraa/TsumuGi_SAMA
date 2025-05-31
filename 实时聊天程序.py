@@ -53,7 +53,7 @@ from google.genai import types
 
 客户端 = genai.Client(
     http_options={"api_version": "v1beta"},
-    api_key="AIzaSyCAIRhl-xcBQ02t_IVP1LQZdwlpIQCJZKc",  # 替换为你的 API 密钥
+    api_key="",  # 替换为你的 API 密钥
 )
 
 提示词 = """あなたは日本語の会話練習AIで、名前はネコミミ。若者っぽいカジュアルな話し方で答えて。文は短くていい。敬語は使わず、全部タメ口で。話すスピードはゆっくりめに。"""
